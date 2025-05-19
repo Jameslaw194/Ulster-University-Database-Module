@@ -1,0 +1,316 @@
+Jupyter Notebokk commands.
+##############################################################################################################################
+##############################################################################################################################
+1
+##############################################################################################################################
+##############################################################################################################################
+#Importing libraries.
+import pyodbc
+import random
+import string
+
+#Function to generate new customer ids.
+def generate_customer_id():
+    first_part = random.choice(string.ascii_uppercase)
+    second_part = f"{random.randint(0, 999):03}"
+    third_part = ''.join(random.choices(string.ascii_uppercase + string.digits, k=2))
+    return f"{first_part}{second_part}-{third_part}"
+
+
+#Establish connection to the SQL Server Database.
+conn = pyodbc.connect(r"Driver={SQL Server};Server=localhost\SQLEXPRESS;Database=storedTest;Trusted_Connection=yes;")
+cursor = conn.cursor()
+
+#Data for the new service booking.
+#Customer information.
+cust_forenames = "James"
+cust_surname = "Law"
+cust_email = "j.law@ulster.ac.uk"
+cust_phoneno = "41727568003"
+
+#Car information.
+registration = "AF500WWJ"
+car_make = "Volkswagen"
+car_model = "Golf"
+date_of_manufacture = "2014-05-25"
+dropoff_date = "2020-06-25"
+dropoff_time = "14:30:00"
+work_required = "MOT check-up"
+milage = 45000
+
+#Check if customer exists.
+customer_query = """
+    SELECT customer_id 
+    FROM Customer 
+    WHERE cust_forenames = ? 
+    AND cust_surname = ?;
+"""
+
+#Execute the query.
+cursor.execute(customer_query, (cust_forenames, cust_surname))
+customer_row = cursor.fetchone()
+
+if customer_row:
+    customer_id = customer_row[0]
+else:
+    # Generate a new, random customer ID if the customer doesn't exist
+    while True:
+        customer_id = generate_customer_id()
+        # Check if the generated customer ID is unique
+        cursor.execute("SELECT 1 FROM Customer WHERE customer_id = ?", (customer_id,))
+        if not cursor.fetchone():
+            break  # Exit the loop if the ID is unique
+
+    # Insert the new customer
+    insert_customer_query = """
+        INSERT INTO Customer (customer_id, cust_forenames, cust_surname, cust_email, cust_phoneno)
+        VALUES (?, ?, ?, ?, ?);
+    """
+
+    # Execute the query
+    cursor.execute(insert_customer_query, (customer_id, cust_forenames, cust_surname, cust_email, cust_phoneno))
+    conn.commit()
+
+#SQL Query to use the stored procedure to check the car is in the database
+cursor.execute("""
+    EXEC InsertCarIfNotExists 
+        @registration = ?, 
+        @make = ?, 
+        @model = ?, 
+        @date_of_manufacture = ?;
+""", (registration, car_make, car_model, date_of_manufacture))
+conn.commit()
+print(f"Car with registration {registration} ensured in the database.")
+
+#Get the latest service ID.
+service_id_query = """
+    SELECT TOP 1 service_id
+    FROM Service
+    ORDER BY service_id DESC;
+"""
+
+#Execute the query.
+cursor.execute(service_id_query)
+last_service_row = cursor.fetchone()
+
+#Logic to make a new service ID.
+if last_service_row:
+    last_service_id = last_service_row[0]
+    #Increment the numeric part of the service ID.
+    prefix, number = last_service_id.split('-')
+    new_service_id = f"{prefix}-{int(number) + 1}"
+else:
+    #If there are no previous services in the database, start from 001.
+    new_service_id = "S2006-001"
+
+#SQL Query to insert the new service into the database.
+insert_service_query = """
+    INSERT INTO Service (service_id, dropoff_date, dropoff_time, work_required, milage, next_service, registration, customer_id)
+    VALUES (?, ?, ?, ?, ?, NULL, ?, ?);
+"""
+
+#Execute the query.
+cursor.execute(insert_service_query,
+               (new_service_id, dropoff_date, dropoff_time, work_required, milage, registration, customer_id))
+conn.commit()
+
+#Output confirmation to the user.
+print(f"Service booking added successfully with Service ID: {new_service_id}")
+
+##############################################################################################################################
+##############################################################################################################################
+2
+##############################################################################################################################
+##############################################################################################################################
+#Importing libraries.
+import pandas as pd
+import pyodbc
+
+#Establish connection to the SQL Server Database.
+conn = pyodbc.connect(r"Driver={SQL Server};Server=localhost\SQLEXPRESS;Database=CarServiceDB;Trusted_Connection=yes;")
+cursor = conn.cursor()
+
+#Input the new service registration and dropoff date.
+new_service_registration = 'SEZ 5629'
+new_service_dropoff_date = '2020-06-17'
+
+#SQL Query to find the mechanics who have worked on previous services of the car
+#and count how many jobs they are involved in on the dropoff date of the new service.
+query = """
+    WITH PreviousMechanics AS (
+        SELECT DISTINCT se.employee_id, e.emp_forenames, e.emp_surname
+        FROM ServiceEmployee se
+        JOIN Service s ON se.service_id = s.service_id
+        JOIN Employee e ON se.employee_id = e.employee_id
+        WHERE s.registration = ?
+    )
+    SELECT pm.employee_id, pm.emp_forenames, pm.emp_surname, 
+           COUNT(se.service_id) AS jobs_today
+    FROM PreviousMechanics pm
+    LEFT JOIN ServiceEmployee se ON pm.employee_id = se.employee_id
+    LEFT JOIN Service s ON se.service_id = s.service_id
+    WHERE s.dropoff_date = ?
+    GROUP BY pm.employee_id, pm.emp_forenames, pm.emp_surname
+    HAVING COUNT(se.service_id) > 0
+    ORDER BY jobs_today DESC;
+"""
+
+#Execute the query.
+cursor.execute(query, (new_service_registration, new_service_dropoff_date))
+rows = cursor.fetchall()
+
+#Create a DataFrame from the query result.
+data = []
+for row in rows:
+    employee_name = f"{row[1]} {row[2]}"  #Combine forename and surname name into a whole name.
+    jobs_today = row[3]
+    data.append([employee_name, jobs_today])
+
+#Create DataFrame for better display.
+result_table = pd.DataFrame(data, columns=['Employee Name', 'Jobs on Service Day'])
+
+#Output the results.
+result_table
+
+##############################################################################################################################
+##############################################################################################################################
+3
+##############################################################################################################################
+##############################################################################################################################
+#Importing libraries.
+import pandas as pd
+import pyodbc
+
+#Establish connection to the SQL Server Database.
+conn = pyodbc.connect(r"Driver={SQL Server};Server=localhost\SQLEXPRESS;Database=CarServiceDB;Trusted_Connection=yes;")
+cursor = conn.cursor()
+
+#Input dates for filtering the services
+start_date = '2020-06-17'
+end_date = '2020-06-19'
+
+#SQL Query to get the total time spent per mechanic within the date range.
+query = """
+    SELECT e.employee_id, e.emp_forenames, e.emp_surname,
+           SUM(DATEDIFF(SECOND, '00:00:00', se.time_spent)) AS total_seconds
+    FROM ServiceEmployee se
+    JOIN Employee e ON se.employee_id = e.employee_id
+    JOIN Service s ON se.service_id = s.service_id
+    WHERE s.dropoff_date BETWEEN ? AND ?
+    GROUP BY e.employee_id, e.emp_forenames, e.emp_surname
+    ORDER BY total_seconds DESC;
+"""
+
+#Execute the query.
+cursor.execute(query, (start_date, end_date))
+rows = cursor.fetchall()
+
+#Create a DataFrame from the query result.
+data = []
+for row in rows:
+    #Convert total seconds to minutes.
+    total_minutes = row[3] / 60
+    employee_name = f"{row[1]} {row[2]}"
+    data.append([employee_name, total_minutes])
+
+#Create DataFrame for better output.
+result_table = pd.DataFrame(data, columns=['Employee Name', 'Total Time (minutes)'])
+
+#Output the results.
+result_table
+
+##############################################################################################################################
+##############################################################################################################################
+4
+##############################################################################################################################
+##############################################################################################################################
+#Importing libraries.
+import pyodbc
+import pandas as pd
+
+#Establish connection to the SQL Server Database.
+conn = pyodbc.connect(r"Driver={SQL Server};Server=localhost\SQLEXPRESS;Database=CarServiceDB;Trusted_Connection=yes;")
+cursor = conn.cursor()
+
+#Start and end date for the query.
+start_date = '2021-06-21'
+end_date = '2021-06-24'
+
+#SQL Query to get the list of customers and the relevant information
+query = """
+SELECT Customer.cust_forenames, Customer.cust_surname, Customer.cust_email, Car.make, Car.registration, Service.next_service
+FROM Customer
+JOIN Service ON Customer.customer_id = Service.customer_id
+JOIN Car ON Service.registration = Car.registration
+WHERE Service.next_service BETWEEN ? AND ?;
+"""
+
+#Execute the query.
+cursor.execute(query, (start_date, end_date))
+rows = cursor.fetchall()
+
+#Create a DataFrame from the query result.
+data = []
+for row in rows:
+    customer_name = f"{row[1]} {row[2]}"  #Combine forename and surname name into a whole name.
+    data.append([customer_name, row[2], row[3], row[4], row[5]])
+
+#Create DataFrame for better display.
+result_table = pd.DataFrame(data, columns=['Customer Name', 'Customer email', 'Car make', 'Registration', 'Date of next service'])
+
+#Output the results.
+result_table
+
+##############################################################################################################################
+##############################################################################################################################
+5
+##############################################################################################################################
+##############################################################################################################################
+#Importing libraries.
+import pandas as pd
+import pyodbc
+
+#Establish connection to the SQL Server Database.
+conn = pyodbc.connect(r"Driver={SQL Server};Server=localhost\SQLEXPRESS;Database=test;Trusted_Connection=yes;")
+cursor = conn.cursor()
+
+#Input employee's employee_id, unavailable period start, and end dates.
+employee_id = 'E9274'
+unavailable_from = '2020-06-22'
+unavailable_to = '2020-06-24'
+
+#SQL Query to insert the employee's unavailability period into the EmployeeAviability table.
+insert_query = """
+    INSERT INTO EmployeeAviability (employee_id, unavailable_from, unavailable_to)
+    VALUES (?, ?, ?);
+"""
+cursor.execute(insert_query, (employee_id, unavailable_from, unavailable_to))
+conn.commit()
+
+#Query to find services the mechanic may be involved in during their unavailability period.
+query = """
+    SELECT se.service_id, se.employee_id, e.emp_forenames, e.emp_surname, s.dropoff_date, s.dropoff_time, s.work_required
+    FROM ServiceEmployee se
+    JOIN Service s ON se.service_id = s.service_id
+    JOIN Employee e ON se.employee_id = e.employee_id
+    WHERE se.employee_id = ? 
+    AND s.dropoff_date BETWEEN ? AND ?
+    ORDER BY s.dropoff_date, s.dropoff_time;
+"""
+
+#Execute the query.
+cursor.execute(query, (employee_id, unavailable_from, unavailable_to))
+rows = cursor.fetchall()
+
+#Create a DataFrame from the query result.
+data = []
+for row in rows:
+    employee_name = f"{row[2]} {row[3]}"
+    data.append([row[0], employee_name, row[4], row[5], row[6]])
+
+#Create DataFrame for better display.
+result_table = pd.DataFrame(data, columns=['Service ID', 'Employee Name', 'Service Date', 'Service Time', 'Work Required'])
+
+#Output the results.
+result_table
+

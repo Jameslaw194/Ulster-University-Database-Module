@@ -1,0 +1,131 @@
+BJI 111
+AF56 WWJ
+LV59 OTP
+SEZ 5629
+MEZ 8086
+GRZ 6511
+DCZ 1844
+VIM 8955
+OEZ 1872
+D268 YCF
+CJ16 WED
+W85 TTF
+LLZ 9362
+WVG 673
+R99 YRK
+T779 OLI
+BEZ 8826
+G5 T77
+STR 9378
+F6 Y886
+YR3 67
+DYR 87
+SWT 9930
+D89 Y6
+Y4 T87
+JEZ 7719
+MEW 783
+JEA 991
+B56 Y34
+FET 6821
+B82 T56
+CEZ 563
+#####
+Vauxhall
+Volkswagen
+Volkswagen
+Skoda
+Subaru
+Subaru
+Nissan
+Skoda
+Alfa Romeo
+Audi
+Vauxhall
+Nissan
+Volkswagen
+Volvo
+BMW
+Ford
+Toyota
+Dacia
+Skoda
+Skoda
+Vauxhall
+Toyota
+Dacia
+Alfa Romeo
+Subaru
+Dacia
+Ford
+Volvo
+Vauxhall
+Nissan
+Skoda
+Volkswagen
+#####
+Astra
+Golf
+Polo
+Superb
+Impreza
+Outback
+Qashqai Visia
+Superb
+Alfasud
+A8 TFSI e
+Corsa-e
+Micra
+Golf
+V90
+6 Series Gran Coupe
+Fiesta 1.25 Zetec
+Corolla
+Duster
+NULL
+Superb
+Corsa-e
+Corolla
+Duster
+Alfasud
+Impreza
+NULL
+Focus
+V70
+Astra
+Qashqai Visia
+Superb
+Golf
+#####
+02-07-2016
+25-05-2014
+30-06-2015
+26-11-2009
+15-10-2017
+01-04-2018
+13-03-2008
+14-10-2016
+22-09-2014
+NULL
+27-01-2020
+12-12-2017
+30-08-2018
+13-12-2019
+04-11-2019
+16-03-2016
+26-05-2015
+19-09-2017
+NULL
+14-12-2018
+27-06-2019
+26-03-2016
+15-02-2018
+02-09-2016
+05-11-2017
+NULL
+19-09-2017
+13-10-2018
+22-07-2017
+13-09-2018
+19-10-2017
+NULL

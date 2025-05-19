@@ -1,0 +1,134 @@
+D13-101
+D13-203
+D13-42
+D14-38
+D17-022
+D17-080
+R180-05
+D13-R93
+D13-51
+D13-306
+L231-12
+D13-R45
+D14-025
+D14-16
+D14-V17
+L231-47
+L231-05
+D17-945
+D17-043
+R180-61
+R180-32
+D17-R14
+L231-44
+D14-37
+D14-V77
+D13-R71
+#####
+Bette
+Cary
+Humphrey
+Katharine
+Marilyn
+Orson
+Vivien
+John
+Ingrid
+William
+Rita
+James
+James
+Rock
+Tony
+Elvis
+Burt
+Frank
+Deborah
+Elizabeth
+Susan
+Lana
+Omar
+Natalie
+Doris
+Sean
+#####
+ Davis
+ Grant
+ Bogart
+ Hepburn
+ Monroe
+ Welles
+ Leigh
+ Wayne
+ Bergman
+ Holden
+ Hayworth
+ Stewart
+ Dean
+ Hudson
+ Curtis
+ Presley
+ Lancaster
+ Sinatra
+ Kerr
+ Taylor
+ Hayward
+ Turner
+ Sharif
+ Wood
+ Day
+ Connery
+#####
+bette.davis@ulster.ac.uk
+bigcary@yahoo.com
+bogieh@gmail.com
+kath_hep29@hotmail.com
+marilyn@hotmail.com
+welles.orson@ulster.ac.uk
+viv.leigh38@gmail.com
+NULL
+IngridB@hotmail.com
+billyho66@yahoo.com
+ritah99@outlook.com
+jimmy_stew@qub.ac.uk
+deenj@outlook.com
+rockyh@hotmail.com
+t.curtis@yahoo.com
+elvisp@yahoo.com
+NULL
+NULL
+NULL
+NULL
+susan.hayward@yahoo.com
+lana.turner@yahoo.com
+sharifo18@hotmail.com
+nattiewood@outlook.com
+d.day67@hotmail.com
+connery.sean007@outlook.com
+#####
+41728003
++44417654321
+07782751839
+NULL
++88487618356732
+08998736126
+02890289675
+02890112233
+66419887654
++38198322843
+077709873980
+08770987654
++447780276405
+NULL
+NULL
+NULL
++447781904569
+08870286004
+02890672593
++442891785397
+NULL
+NULL
+00447880708090
+NULL
++4478779297611
+NULL

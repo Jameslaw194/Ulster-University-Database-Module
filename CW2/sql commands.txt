@@ -1,0 +1,351 @@
+Service(*service_id, dropoff_date, dropoff_time, work_required, milage, next_service, #registration, #customer_id)
+
+ServiceEmployee(*#service_id, *#employee_id, time_spent)
+
+Employee(*employee_id, emp_forenames, emp_surname, emp_phone, grade)
+
+EmployeeAviability(*#employee_id, *unavailable_from, *unavailable_to)
+
+Customer(*customer_id, cust_forenames, cust_surname, cust_email, cust_phoneno)
+
+Car(*registration, make, model, date_of_manufacture)
+
+
+################################################################################
+--Create the database.
+CREATE DATABASE CarServiceDBVideo;
+GO
+
+--Switch to the new database.
+USE CarServiceDBVideo;
+GO
+
+--Create the tables.
+CREATE TABLE Customer ( --Create the Customer table.
+    customer_id VARCHAR(10) PRIMARY KEY,
+    cust_forenames VARCHAR(10) NOT NULL,
+    cust_surname VARCHAR(10) NOT NULL,
+    cust_email VARCHAR(MAX),
+    cust_phoneno VARCHAR(15)
+);
+
+CREATE TABLE Car ( --Create the car table.
+    registration VARCHAR(10) PRIMARY KEY,
+    make VARCHAR(10) NOT NULL,
+    model VARCHAR(20),
+    date_of_manufacture DATE
+);
+
+CREATE TABLE Employee ( --Create the Employee table.
+    employee_id VARCHAR(10) PRIMARY KEY,
+    emp_forenames VARCHAR(10) NOT NULL,
+    emp_surname VARCHAR(12) NOT NULL,
+    emp_phone VARCHAR(15) NOT NULL,
+    grade VARCHAR(20) NOT NULL,
+);
+
+CREATE TABLE Service ( --Create the Service table
+    service_id VARCHAR(12) PRIMARY KEY,
+    dropoff_date DATE NOT NULL,
+    dropoff_time TIME(0) NOT NULL,
+    work_required VARCHAR(MAX) NOT NULL,
+    milage INT NOT NULL,
+    next_service DATE,
+    registration VARCHAR(10) NOT NULL, -- Links to Car.registration
+    customer_id VARCHAR(10) NOT NULL, -- Links to Customer.customer_id
+    CONSTRAINT FK_Service_Car FOREIGN KEY (registration) REFERENCES Car (registration) ON DELETE CASCADE, --Creates a foreign key constraint to link Service to Car.
+													--If a Car is deleted, associated Service records are also deleted.
+    CONSTRAINT FK_Service_Customer FOREIGN KEY (customer_id) REFERENCES Customer (customer_id) ON DELETE CASCADE --Creates a foreign key constraint to link Service to Customer.
+													--If a Customer is deleted, associated Service records are also deleted.
+);
+
+CREATE TABLE ServiceEmployee ( --Create the Service employee table.
+    service_id VARCHAR(12) NOT NULL,
+    employee_id VARCHAR(10) NOT NULL,
+    time_spent TIME(0),
+    PRIMARY KEY (service_id, employee_id),
+    CONSTRAINT FK_ServiceEmployee_Service FOREIGN KEY (service_id) REFERENCES Service (service_id) ON DELETE CASCADE, --Creates a foreign key constraint to link ServiceEmployee to Service.
+															--If a Service is deleted, related records in ServiceEmployee are also deleted.
+    CONSTRAINT FK_ServiceEmployee_Employee FOREIGN KEY (employee_id) REFERENCES Employee (employee_id) ON DELETE CASCADE --Creates a foreign key constraint to link ServiceEmployee to Employee.
+															--If an Employee is deleted, related records in ServiceEmployee are also deleted.
+);
+
+CREATE TABLE EmployeeAviability ( --Create the Employee aviability table.
+    employee_id VARCHAR(10) NOT NULL,
+    unavailable_from DATE NOT NULL,
+    unavailable_to DATE NOT NULL,
+    PRIMARY KEY (employee_id, unavailable_from, unavailable_to),
+    FOREIGN KEY (employee_id) REFERENCES Employee(employee_id) ON DELETE CASCADE --Creates a foreign key constraint to link EmployeeAviability to Employee.
+										--If an Employee is deleted, their availability records are also deleted.
+);
+GO
+
+
+################################################################################################################################################################
+################################################################################################################################################################
+
+INSERT INTO Customer (customer_id, cust_forenames, cust_surname, cust_email, cust_phoneno) VALUES
+('D13-101', 'Bette', 'Davis', 'bette.davis@ulster.ac.uk', '41728003'),
+('D13-203', 'Cary', 'Grant', 'bigcary@yahoo.com', '+44417654321'),
+('D13-42', 'Humphrey', 'Bogart', 'bogieh@gmail.com', '07782751839'),
+('D14-38', 'Katharine', 'Hepburn', 'kath_hep29@hotmail.com', NULL),
+('D17-022', 'Marilyn', 'Monroe', 'marilyn@hotmail.com', '+88487618356732'),
+('D17-080', 'Orson', 'Welles', 'welles.orson@ulster.ac.uk', '08998736126'),
+('R180-05', 'Vivien', 'Leigh', 'viv.leigh38@gmail.com', '02890289675'),
+('D13-R93', 'John', 'Wayne', NULL, '02890112233'),
+('D13-51', 'Ingrid', 'Bergman', 'IngridB@hotmail.com', '66419887654'),
+('D13-306', 'William', 'Holden', 'billyho66@yahoo.com', '+38198322843'),
+('L231-12', 'Rita', 'Hayworth', 'ritah99@outlook.com', '077709873980'),
+('D13-R45', 'James', 'Stewart', 'jimmy_stew@qub.ac.uk', '08770987654'),
+('D14-025', 'James', 'Dean', 'deenj@outlook.com', '+447780276405'),
+('D14-16', 'Rock', 'Hudson', 'rockyh@hotmail.com', NULL),
+('D14-V17', 'Tony', 'Curtis', 't.curtis@yahoo.com', NULL),
+('L231-47', 'Elvis', 'Presley', 'elvisp@yahoo.com', NULL),
+('L231-05', 'Burt', 'Lancaster', NULL, '+447781904569'),
+('D17-945', 'Frank', 'Sinatra', NULL, '08870286004'),
+('D17-043', 'Deborah', 'Kerr', NULL, '02890672593'),
+('R180-61', 'Elizabeth', 'Taylor', NULL, '+442891785397'),
+('R180-32', 'Susan', 'Hayward', 'susan.hayward@yahoo.com', NULL),
+('D17-R14', 'Lana', 'Turner', 'lana.turner@yahoo.com', NULL),
+('L231-44', 'Omar', 'Sharif', 'sharifo18@hotmail.com', '00447880708090'),
+('D14-37', 'Natalie', 'Wood', 'nattiewood@outlook.com', NULL),
+('D14-V77', 'Doris', 'Day', 'd.day67@hotmail.com', '+4478779297611'),
+('D13-R71', 'Sean', 'Connery', 'connery.sean007@outlook.com', NULL);
+
+################################################################################################################################################################
+################################################################################################################################################################
+
+INSERT INTO Employee (employee_id, emp_forenames, emp_surname, emp_phone, grade) VALUES
+('E9274', 'Tim', 'Berners-Lee', '+442890469927', 'Trainee'),
+('E1037', 'Edgar F', 'Codd', '07882751331', 'Mechanic'),
+('E7291', 'Tony', 'Hoare', '+44717689275', 'Apprentice'),
+('E4470', 'Ada', 'Lovelace', '07811304671', 'Mechanic'),
+('E2045', 'Grace', 'Hopper', '+447880496206', 'Apprentice'),
+('E0392', 'Edsger', 'Dijkstra', '07751839368', 'Senior Mechanic'),
+('E2648', 'Alan', 'Turing', '02890568482', 'Apprentice'),
+('UNASSIGNED', 'NULL', 'NULL', 'NULL', 'NULL');
+
+################################################################################################################################################################
+################################################################################################################################################################
+
+INSERT INTO Car (registration, make, model, date_of_manufacture) VALUES
+('BJI 111', 'Vauxhall', 'Astra', '2016-07-02'),
+('AF56 WWJ', 'Volkswagen', 'Golf', '2014-05-25'),
+('LV59 OTP', 'Volkswagen', 'Polo', '2015-06-30'),
+('SEZ 5629', 'Skoda', 'Superb', '2009-11-26'),
+('MEZ 8086', 'Subaru', 'Impreza', '2017-10-15'),
+('GRZ 6511', 'Subaru', 'Outback', '2018-04-01'),
+('DCZ 1844', 'Nissan', 'Qashqai Visia', '2008-03-13'),
+('VIM 8955', 'Skoda', 'Superb', '2016-10-14'),
+('OEZ 1872', 'Alfa Romeo', 'Alfasud', '2014-09-22'),
+('D268 YCF', 'Audi', 'A8 TFSI e', NULL),
+('CJ16 WED', 'Vauxhall', 'Corsa-e', '2020-01-27'),
+('W85 TTF', 'Nissan', 'Micra', '2017-12-12'),
+('LLZ 9362', 'Volkswagen', 'Golf', '2018-08-30'),
+('WVG 673', 'Volvo', 'V90', '2019-12-13'),
+('R99 YRK', 'BMW', '6 Series Gran Coupe', '2019-11-04'),
+('T779 OLI', 'Ford', 'Fiesta 1.25 Zetec', '2016-03-16'),
+('BEZ 8826', 'Toyota', 'Corolla', '2015-05-26'),
+('G5 T77', 'Dacia', 'Duster', '2017-09-19'),
+('STR 9378', 'Skoda', NULL, NULL),
+('F6 Y886', 'Skoda', 'Superb', '2018-12-14'),
+('YR3 67', 'Vauxhall', 'Corsa-e', '2019-06-27'),
+('DYR 87', 'Toyota', 'Corolla', '2016-03-26'),
+('SWT 9930', 'Dacia', 'Duster', '2018-02-15'),
+('D89 Y6', 'Alfa Romeo', 'Alfasud', '2016-09-02'),
+('Y4 T87', 'Subaru', 'Impreza', '2017-11-05'),
+('JEZ 7719', 'Dacia', NULL, NULL),
+('MEW 783', 'Ford', 'Focus', '2017-09-19'),
+('JEA 991', 'Volvo', 'V70', '2018-10-13'),
+('B56 Y34', 'Vauxhall', 'Astra', '2017-07-22'),
+('FET 6821', 'Nissan', 'Qashqai Visia', '2018-09-13'),
+('B82 T56', 'Skoda', 'Superb', '2017-10-19'),
+('CEZ 563', 'Volkswagen', 'Golf', NULL);
+
+################################################################################################################################################################
+################################################################################################################################################################
+
+INSERT INTO Service (service_id, dropoff_date, dropoff_time, work_required, milage, next_service, registration, customer_id) VALUES
+('S2006-101', '2020-06-17', '08:30:00', 'MOT check-up', 45461, '2021-06-21', 'BJI 111', 'D13-101'),
+('S2006-102', '2020-06-17', '14:30:00', 'MOT check-up', 75712, '2021-06-20', 'AF56 WWJ', 'D13-203'),
+('S2006-103', '2020-06-17', '08:00:00', 'Other - Wheel bearing - front passengers side', 49904, '2021-06-18', 'LV59 OTP', 'D13-42'),
+('S2006-104', '2020-06-17', '07:30:00', 'Other - Not going into third gear. All other gears are okay.', 135312, '2021-06-21', 'SEZ 5629', 'D13-R93'),
+('S2006-105', '2020-06-17', '08:15:00', 'Annual service', 31446, '2021-06-19', 'MEZ 8086', 'D14-38'),
+('S2006-106', '2020-06-18', '16:30:00', 'Other - Rattle in the front suspension', 21043, '2021-06-21', 'GRZ 6511', 'D17-022'),
+('S2006-107', '2020-06-18', '08:30:00', 'MOT check-up', 142958, '2021-06-18', 'DCZ 1844', 'D17-080'),
+('S2006-108', '2020-06-18', '08:00:00', 'MOT check-up', 25077, '2021-06-19', 'VIM 8955', 'R180-05'),
+('S2006-109', '2020-06-19', '08:30:00', 'Other - Oil leak - looks major', 85602, '2021-06-21', 'OEZ 1872', 'D13-101'),
+('S2006-110', '2020-06-19', '08:45:00', 'Other - Loses power going up hills. Can not go over 50 mph', 9362, '2021-06-21', 'D268 YCF', 'D13-51'),
+('S2006-111', '2020-06-19', '08:30:00', 'Other - Air conditioning not working', 5903, '2021-06-19', 'CJ16 WED', 'D13-306'),
+('S2006-112', '2020-06-19', '08:30:00', 'Other - Grinding noise from the brakes and whirring noise from the front.', 34943, '2021-06-23', 'W85 TTF', 'D17-022'),
+('S2006-113', '2020-06-19', '08:30:00', 'Annual service', 15033, '2021-06-21', 'LLZ 9362', 'D13-306'),
+('S2006-114', '2020-06-20', '16:45:00', 'Other - high pitched whistling noise coming from the front.', 7034, '2021-06-21', 'WVG 673', 'D17-080'),
+('S2006-115', '2020-06-20', '08:30:00', 'Other - Filled with diesel - should have been petrol! Will need collected.', 4766, NULL, 'R99 YRK', 'L231-12'),
+('S2006-116', '2020-06-20', '12:30:00', 'MOT check-up', 21641, '2021-06-22', 'T779 OLI', 'D13-R45'),
+('S2006-117', '2020-06-20', '08:15:00', 'Other - Front tyres are wearing away on the inside. Wire is showing.', 94006, '2021-06-20', 'BEZ 8826', 'D13-51'),
+('S2006-118', '2020-06-22', '08:30:00', 'Annual service', 42743, '2021-06-24', 'G5 T77', 'D13-306'),
+('S2006-119', '2020-06-22', '08:30:00', 'Other - Same problem as before - worked for a while, but now not going into first or third gear.', 135394, '2021-06-21', 'SEZ 5629', 'D13-R93'),
+('S2006-120', '2020-06-22', '10:30:00', 'MOT check-up', 63092, '2021-06-22', 'STR 9378', 'D14-025'),
+('S2006-121', '2020-06-23', '08:30:00', 'Annual service', 18932, '2021-06-25', 'F6 Y886', 'D14-16'),
+('S2006-122', '2020-06-23', '09:00:00', 'Annual service', 11037, '2021-06-25', 'YR3 67', 'D14-V17'),
+('S2006-123', '2020-06-23', '16:15:00', 'MOT check-up', 48841, '2021-06-23', 'DYR 87', 'L231-47'),
+('S2006-124', '2020-06-23', '08:30:00', 'Annual service', 20026, '2021-06-24', 'SWT 9930', 'L231-05'),
+('S2006-125', '2020-06-24', '12:15:00', 'MOT check-up', 31604, NULL, 'D89 Y6', 'D17-945'),
+('S2006-126', '2020-06-24', '08:15:00', 'Other - front suspension has collapsed.', 36480, NULL, 'Y4 T87', 'D17-043'),
+('S2006-127', '2020-06-24', '08:30:00', 'MOT check-up', 84629, '2021-06-24', 'JEZ 7719', 'R180-61'),
+('S2006-128', '2020-06-24', '08:00:00', 'Other - Power steering not working. Very hard to turn the steering wheel.', 22030, '2020-12-09', 'MEW 783', 'R180-32'),
+('S2006-129', '2020-06-24', '14:30:00', 'Annual service', 11729, '2020-06-25', 'JEA 991', 'D17-R14'),
+('S2006-130', '2020-06-24', '08:00:00', 'Annual service', 51815, '2020-06-13', 'B56 Y34', 'L231-44'),
+('S2006-131', '2020-06-25', '07:45:00', 'Annual service', 18037, '2020-06-30', 'FET 6821', 'D14-37'),
+('S2006-132', '2020-06-25', '08:15:00', 'Other - none of the lights are working', 37104, NULL, 'B82 T56', 'D14-V77'),
+('S2006-133', '2020-06-25', '16:30:00', 'MOT check-up', 71402, '2021-06-25', 'CEZ 563', 'D13-R71'),
+('S2006-134', '2020-06-25', '08:30:00', 'Other - Car not starting', 76537, '2021-06-20', 'AF56 WWJ', 'D13-203'),
+('S2006-135', '2020-06-25', '14:30:00', 'Other - Now there are grinding sounds from gearbox!!!', 135576, '2021-06-21', 'SEZ 5629', 'D13-R93');
+
+################################################################################################################################################################
+################################################################################################################################################################
+
+INSERT INTO ServiceEmployee (service_id, employee_id, time_spent) VALUES
+('S2006-101', 'E9274', '03:15'),
+('S2006-101', 'E1037', '00:45'),
+('S2006-102', 'E7291', '04:00'),
+('S2006-102', 'E4470', '00:30'),
+('S2006-103', 'E2045', '03:30'),
+('S2006-103', 'E1037', '06:20'),
+('S2006-103', 'E0392', '01:10'),
+('S2006-104', 'E9274', '02:25'),
+('S2006-104', 'E4470', '09:25'),
+('S2006-104', 'E1037', '05:15'),
+('S2006-105', 'E2045', '04:20'),
+('S2006-105', 'E0392', '01:00'),
+('S2006-106', 'E9274', '05:20'),
+('S2006-106', 'E1037', '03:15'),
+('S2006-107', 'E9274', '01:15'),
+('S2006-107', 'E1037', '04:35'),
+('S2006-108', 'E2648', '03:35'),
+('S2006-108', 'E4470', '03:35'),
+('S2006-109', 'E7291', '04:25'),
+('S2006-109', 'E0392', '06:20'),
+('S2006-109', 'E1037', '01:15'),
+('S2006-110', 'E2648', '02:15'),
+('S2006-110', 'E0392', '10:15'),
+('S2006-110', 'E1037', '10:15'),
+('S2006-111', 'E2045', '05:00'),
+('S2006-112', 'E2045', '01:45'),
+('S2006-112', 'E4470', '08:05'),
+('S2006-112', 'E0392', '06:35'),
+('S2006-113', 'E7291', '03:30'),
+('S2006-113', 'E4470', '03:55'),
+('S2006-114', 'E7291', '03:15'),
+('S2006-114', 'E4470', '03:20'),
+('S2006-114', 'E1037', '02:15'),
+('S2006-115', 'E9274', '05:35'),
+('S2006-115', 'E1037', '05:35'),
+('S2006-116', 'E2045', '03:45'),
+('S2006-116', 'E1037', '04:15'),
+('S2006-117', 'E7291', '01:15'),
+('S2006-117', 'E4470', '02:35'),
+('S2006-118', 'E9274', '03:20'),
+('S2006-118', 'E0392', '00:50'),
+('S2006-119', 'E9274', '02:35'),
+('S2006-119', 'E1037', '04:40'),
+('S2006-120', 'E2648', '03:30'),
+('S2006-120', 'E4470', '02:50'),
+('S2006-121', 'E2045', NULL),
+('S2006-122', 'E7291', NULL),
+('S2006-123', 'E2648', NULL),
+('S2006-124', 'E9274', NULL),
+('S2006-125', 'E2648', NULL),
+('S2006-126', 'UNASSIGNED', NULL),
+('S2006-127', 'E7291', NULL),
+('S2006-128', 'UNASSIGNED', NULL),
+('S2006-129', 'E2045', NULL),
+('S2006-130', 'E9274', NULL),
+('S2006-131', 'E2648', NULL),
+('S2006-132', 'UNASSIGNED', NULL),
+('S2006-133', 'E7291', NULL),
+('S2006-134', 'UNASSIGNED', NULL),
+('S2006-135', 'UNASSIGNED', NULL);
+
+################################################################################################################################################################
+################################################################################################################################################################
+
+CREATE TRIGGER trg_AfterServiceInsert --Creates a trigger named trg_AfterServiceInsert.
+ON Service --Specifies the trigger is applied to the Service table.
+AFTER INSERT --Indicates the trigger will execute after an INSERT operation on the Service table.
+AS
+BEGIN
+    -- Insert a new row into the ServiceEmployee table for each new entry in the Service table.
+    INSERT INTO ServiceEmployee (service_id, employee_id, time_spent) --Specifies the columns to insert data into.
+    SELECT service_id, --Uses the service_id from the newly inserted row(s) in the Service table.
+           'UNASSIGNED', --Sets a placeholder value 'UNASSIGNED' for the employee_id.
+           NULL --Sets the initial value of time_spent to NULL.
+    FROM inserted; --Refers to the virtual table containing the newly inserted row(s).
+END;
+
+
+################################################################################################################################################################
+################################################################################################################################################################
+
+CREATE PROCEDURE InsertCarIfNotExists --Creates a stored procedure named InsertCarIfNotExists.
+    @registration VARCHAR(10), --Defines an input parameter for the car's registration number.
+    @make VARCHAR(50), --Defines an input parameter for the car's make (manufacturer).
+    @model VARCHAR(50), --Defines an input parameter for the car's model.
+    @date_of_manufacture DATE --Defines an input parameter for the car's manufacturing date.
+AS
+BEGIN
+    -- Check if the car exists in the Car table.
+    IF NOT EXISTS (
+        SELECT 1 --Checks for the existence of at least one row.
+        FROM Car --From the Car table.
+        WHERE registration = @registration --Filters for a matching registration number.
+    )
+    BEGIN
+        -- If the car does not exist, insert a new record into the Car table.
+        INSERT INTO Car (registration, make, model, date_of_manufacture) --Specifies the columns for the new record.
+        VALUES (@registration, @make, @model, @date_of_manufacture); --Inserts the values provided as parameters.
+    END
+END;
+
+
+################################################################################################################################################################
+################################################################################################################################################################
+
+CREATE PROCEDURE InsertCustomerIfNotExists --Creates a stored procedure named InsertCustomerIfNotExists.
+    @customer_id VARCHAR(10), --Defines an input parameter for the customer ID.
+    @cust_forenames VARCHAR(100), --Defines an input parameter for the customer's first name(s).
+    @cust_surname VARCHAR(100), --Defines an input parameter for the customer's surname.
+    @cust_email VARCHAR(MAX), --Defines an input parameter for the customer's email address.
+    @cust_phoneno VARCHAR(15) --Defines an input parameter for the customer's phone number.
+AS
+BEGIN
+    -- Check if the customer exists in the Customer table.
+    IF NOT EXISTS (
+        SELECT 1 --Checks for the existence of at least one row.
+        FROM Customer --From the Customer table.
+        WHERE customer_id = @customer_id --Filters for a matching customer ID.
+    )
+    BEGIN
+        -- If the customer does not exist, insert a new record into the Customer table.
+        INSERT INTO Customer (customer_id, cust_forenames, cust_surname, cust_email, cust_phoneno) --Specifies the columns for the new record.
+        VALUES (@customer_id, @cust_forenames, @cust_surname, @cust_email, @cust_phoneno); --Inserts the values provided as parameters.
+    END
+END;
+
+
+
+################################################################################################################################################################
+################################################################################################################################################################
+################################################################################################################################################################
+################################################################################################################################################################
+!pip install ipython-sql
+!pip install pyodbc
+
+import pandas as pd
+import pyodbc
+conn = pyodbc.connect(r"Driver={SQL Server};Server=localhost\SQLEXPRESS;Database=CarServiceDB;Trusted_Connection=yes;")
+conn.close()
+
+################################################################################################################################################################
+################################################################################################################################################################
+

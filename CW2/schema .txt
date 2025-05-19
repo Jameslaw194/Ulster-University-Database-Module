@@ -1,0 +1,73 @@
+Unnormalised fields:
+
+service_id, employee_id, time_spent, dropoff_date, dropoff_time, work_required, milage, next_service, emp_name, emp_phone, grade, registration, make, model, date_of_manufacture, customer_id, cust_name, cust_email, cust_phoneno
+
+Potential entities/tables:
+
+ - Customer
+ - Service
+ - Car
+ - Employee
+
+Potential relationships/cardinality ratio/participation constraints:
+
+ - Customer:Car (One to Many) (Full, Full)
+ - Car:Service (One to Many) (Partial, Full)
+ - ServiceEmployee:Service (Many to Many) (Partial, Full)
+ - Employee:EmployeeAviability (One to Many) (Partial, Full)
+
+--------------------------------------------------------------------------------------
+
+1st Normal Form:
+
+Service(*service_id, dropoff_date, dropoff_time, work_required, milage, next_service, registration, make, model, date_of_manufacture, customer_id, cust_forenames, cust_surname, cust_email, cust_phoneno)
+
+Employee(*#service_id, *employee_id, emp_forenames, emp_surname, emp_phone, grade, time_spent)
+
+--------------------------------------------------------------------------------------
+
+2nd Normal Form:
+
+Service(*service_id, dropoff_date, dropoff_time, work_required, milage, next_service, registration, make, model, date_of_manufacture, customer_id, cust_forenames, cust_surname, cust_email, cust_phoneno)
+
+ServiceEmployee(*#service_id, *#employee_id, time_spent)
+
+Employee(*employee_id, emp_forenames, emp_surname, emp_phone, grade)
+
+--------------------------------------------------------------------------------------
+
+3rd Normal Form:
+
+Service(*service_id, dropoff_date, dropoff_time, work_required, milage, next_service, #registration, #customer_id)
+
+ServiceEmployee(*#service_id, *#employee_id, time_spent)
+
+Employee(*employee_id, emp_forenames, emp_surname, emp_phone, grade)
+
+Customer(*customer_id, cust_forenames, cust_surname, cust_email, cust_phoneno)
+
+Car(*registration, make, model, date_of_manufacture)
+
+EmployeeAviability(*aviability_id, #employee_id, unavailable_from, unavailable_to)
+
+
+##############################################################################################################################
+##############################################################################################################################
+
+SQL code used to make the database
+SQL code used to populate the tables
+
+constraints, default values, on delete clauses, stored procedures and triggers
+
+SQL and python comments
+
+good layout for readability
+
+business processes
+
+limitations for modelling and implemented
+
+
+##############################################################################################################################
+##############################################################################################################################
+

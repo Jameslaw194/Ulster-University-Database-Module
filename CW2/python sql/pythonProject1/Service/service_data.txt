@@ -1,0 +1,287 @@
+S2006-101
+S2006-102
+S2006-103
+S2006-104
+S2006-105
+S2006-106
+S2006-107
+S2006-108
+S2006-109
+S2006-110
+S2006-111
+S2006-112
+S2006-113
+S2006-114
+S2006-115
+S2006-116
+S2006-117
+S2006-118
+S2006-119
+S2006-120
+S2006-121
+S2006-122
+S2006-123
+S2006-124
+S2006-125
+S2006-126
+S2006-127
+S2006-128
+S2006-129
+S2006-130
+S2006-131
+S2006-132
+S2006-133
+S2006-134
+S2006-135
+#####
+17-06-2020
+17-06-2020
+17-06-2020
+17-06-2020
+17-06-2020
+18-06-2020
+18-06-2020
+18-06-2020
+19-06-2020
+19-06-2020
+19-06-2020
+19-06-2020
+19-06-2020
+20-06-2020
+20-06-2020
+20-06-2020
+20-06-2020
+22-06-2020
+22-06-2020
+22-06-2020
+23-06-2020
+23-06-2020
+23-06-2020
+23-06-2020
+24-06-2020
+24-06-2020
+24-06-2020
+24-06-2020
+24-06-2020
+24-06-2020
+25-06-2020
+25-06-2020
+25-06-2020
+25-06-2020
+25-06-2020
+#####
+08:30:00
+14:30:00
+08:00:00
+07:30:00
+08:15:00
+16:30:00
+08:30:00
+08:00:00
+08:30:00
+08:45:00
+08:30:00
+08:30:00
+08:30:00
+16:45:00
+08:30:00
+12:30:00
+08:15:00
+08:30:00
+08:30:00
+10:30:00
+08:30:00
+09:00:00
+16:15:00
+08:30:00
+12:15:00
+08:15:00
+08:30:00
+08:00:00
+14:30:00
+08:00:00
+07:45:00
+08:15:00
+16:30:00
+08:30:00
+14:30:00
+#####
+MOT check-up
+MOT check-up
+Other - Wheel bearing - front passengers side
+Other - Not going into third gear. All other gears are okay.
+Annual service
+Other - Rattle in the front suspension
+MOT check-up
+MOT check-up
+Other - Oil leak - looks major
+Other - Loses power going up hills. Can not go over 50 mph
+Other - Air conditioning not working
+Other - Grinding noise from the brakes and whirring noise from the front.
+Annual service
+Other - high pitched whistling noise coming from the front.
+Other - Filled with diesel - should have been petrol! Will need collected.
+MOT check-up
+Other - Front tyres are wearing away on the inside. Wire is showing.
+Annual service
+Other - Same problem as before - worked for a while, but now not going into first or third gear.
+MOT check-up
+Annual service
+Annual service
+MOT check-up
+Annual service
+MOT check-up
+Other - front suspension has collapsed.
+MOT check-up
+Other - Power steering not working. Very hard to turn the steering wheel.
+Annual service
+Annual service
+Annual service
+Other - none of the lights are working
+MOT check-up
+Other - Car not starting
+Other - Now there are grinding sounds from gearbox!!!
+#####
+45461
+75712
+49904
+135312
+31446
+21043
+142958
+25077
+85602
+9362
+5903
+34943
+15033
+7034
+4766
+21641
+94006
+42743
+135394
+63092
+18932
+11037
+48841
+20026
+31604
+36480
+84629
+22030
+11729
+51815
+18037
+37104
+71402
+76537
+135576
+#####
+21-06-2021
+20-06-2021
+18-06-2021
+21-06-2021
+19-06-2021
+21-06-2021
+18-06-2021
+19-06-2021
+21-06-2021
+21-06-2021
+19-06-2021
+23-06-2021
+21-06-2021
+21-06-2021
+NULL
+22-06-2021
+20-06-2021
+24-06-2021
+21-06-2021
+22-06-2021
+25-06-2021
+25-06-2021
+23-06-2021
+24-06-2021
+NULL
+NULL
+24-06-2021
+09-12-2020
+25-06-2020
+13-06-2020
+30-06-2020
+NULL
+25-06-2021
+20-06-2021
+21-06-2021
+#####
+BJI 111
+AF56 WWJ
+LV59 OTP
+SEZ 5629
+MEZ 8086
+GRZ 6511
+DCZ 1844
+VIM 8955
+OEZ 1872
+D268 YCF
+CJ16 WED
+W85 TTF
+LLZ 9362
+WVG 673
+R99 YRK
+T779 OLI
+BEZ 8826
+G5 T77
+SEZ 5629
+STR 9378
+F6 Y886
+YR3 67
+DYR 87
+SWT 9930
+D89 Y6
+Y4 T87
+JEZ 7719
+MEW 783
+JEA 991
+B56 Y34
+FET 6821
+B82 T56
+CEZ 563
+AF56 WWJ
+SEZ 5629
+#####
+D13-101
+D13-203
+D13-42
+D13-R93
+D14-38
+D17-022
+D17-080
+R180-05
+D13-101
+D13-51
+D13-306
+D17-022
+D13-306
+D17-080
+L231-12
+D13-R45
+D13-51
+D13-306
+D13-R93
+D14-025
+D14-16
+D14-V17
+L231-47
+L231-05
+D17-945
+D17-043
+R180-61
+R180-32
+D17-R14
+L231-44
+D14-37
+D14-V77
+D13-R71
+D13-203
+D13-R93

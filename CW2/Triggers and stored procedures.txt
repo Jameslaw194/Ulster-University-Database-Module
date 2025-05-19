@@ -1,0 +1,88 @@
+Triggers and stored procedures
+
+
+-----------------------------------------------------------------------------------
+----------------------------------------------------------------------------
+CREATE TRIGGER trg_AfterServiceInsert
+ON Service
+AFTER INSERT
+AS
+BEGIN
+    -- Insert into ServiceEmployee for each new Service entry
+    INSERT INTO ServiceEmployee (service_id, employee_id, time_spent)
+    SELECT service_id, 'UNASSIGNED', NULL
+    FROM inserted;
+END;
+
+Explanation of the Trigger
+Trigger Type: AFTER INSERT ensures the trigger fires after a new record is successfully added to the Service table.
+inserted Table: The inserted table is a special, temporary table available in triggers. It contains the rows that were just inserted into the target table (Service).
+Action: The INSERT statement copies the service_id from the inserted table into ServiceEmployee with:
+employee_id defaulting to 'UNASSIGNED'.
+time_spent defaulting to NULL.
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+
+CREATE PROCEDURE InsertCarIfNotExists
+    @registration VARCHAR(10),
+    @make VARCHAR(50),
+    @model VARCHAR(50),
+    @date_of_manufacture DATE
+AS
+BEGIN
+    -- Check if the car exists
+    IF NOT EXISTS (
+        SELECT 1
+        FROM Car
+        WHERE registration = @registration
+    )
+    BEGIN
+        -- Insert the new car
+        INSERT INTO Car (registration, make, model, date_of_manufacture)
+        VALUES (@registration, @make, @model, @date_of_manufacture);
+    END
+END;
+
+Explanation of the Procedure: InsertCarIfNotExists
+Purpose: Ensures a car is added to the database only if it doesn't already exist.
+
+Parameters:
+
+@registration: The car's unique registration number.
+@make: The manufacturer of the car.
+@model: The car's model.
+@date_of_manufacture: The car's manufacture date.
+Logic:
+
+Existence Check: Uses an IF NOT EXISTS condition to check if a car with the provided registration already exists in the Car table.
+Action: If no matching record exists, an INSERT statement adds the new car to the table.
+Outcome: Prevents duplicate entries while ensuring new cars are added seamlessly.
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+
+
+CREATE PROCEDURE InsertCustomerIfNotExists
+    @customer_id VARCHAR(10),
+    @cust_forenames VARCHAR(100),
+    @cust_surname VARCHAR(100),
+    @cust_email VARCHAR(MAX),
+    @cust_phoneno VARCHAR(15)
+AS
+BEGIN
+    -- Check if the customer exists
+    IF NOT EXISTS (
+        SELECT 1
+        FROM Customer
+        WHERE customer_id = @customer_id
+    )
+    BEGIN
+        -- Insert the new customer
+        INSERT INTO Customer (customer_id, cust_forenames, cust_surname, cust_email, cust_phoneno)
+        VALUES (@customer_id, @cust_forenames, @cust_surname, @cust_email, @cust_phoneno);
+    END
+END;
+
+
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+
